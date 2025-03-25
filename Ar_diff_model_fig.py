@@ -47,4 +47,4 @@ save_plot = input("Enter plot name, or n to not save the plot: ")
 if save_plot == "n":
     plt.show()
 else:
-    plt.savefig("Output/"+save_plot+".jpg", dpi = 600)
+    plt.savefig("Output/4_plate_output/"+save_plot+".jpg", dpi = 600)
