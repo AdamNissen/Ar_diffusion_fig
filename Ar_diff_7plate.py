@@ -13,12 +13,18 @@ import numpy as np
 #importing data
 dif_data = pd.read_csv("Data\Ar_Diffusion.csv")
 spot_data = pd.read_csv("Data\Spot_dates.csv")
+dif_data = dif_data.query("Mesh == 40 or Mesh == 12")
 
 #Building a list full of colourmap functions to be used later 
-cmaps = [plt.cm.Purples,
-         plt.cm.Reds,
-         plt.cm.Blues,
-         plt.cm.Oranges]
+# cmaps = [plt.cm.Purples,#If commented out we will just use single colours for one plotted mesh size
+#          plt.cm.Reds,
+#          plt.cm.Blues,
+#          plt.cm.Oranges]
+
+colours = ['purple',
+           'red',
+           'blue',
+           'orange']
 
 n = len(dif_data['Mesh'].unique())+3
 
@@ -48,6 +54,11 @@ for i in range(7):
         ax.set_xlabel('Distance from grain core (μm)')
         ax.set_ylabel('Date (Ma)')
         
+        #Setting x axis to the top
+        # ax.tick_params(axis = 'x', top = True, labeltop = True, bottom = False, labelbottom = False)
+        ax.xaxis.tick_top()  
+        ax.xaxis.set_label_position('top')
+        
         #iterating over each scenario so the colourmaps line up nicely
         # for j in dif_data["Scenario"].unique(): #could use this line, but I think having a number will help more.
         for j in range(4):
@@ -55,13 +66,14 @@ for i in range(7):
             
             #Making a colourmap for each scenario based on mesh number. The plus three is to make sure no colour is too pale to discern
             #n = len(dif_data.query("Scenario == @scenario")['Mesh'].unique())+3
-            colours = cmaps[j](np.linspace(0, 1, n))
+            #colours = cmaps[j](np.linspace(0, 1, n))#Commented out
             
             #iterating over each mesh in a scenario so the colours match nicely.
             #This is overcomplicated because there is only partial sharing of mesh sizes across grain sizes
             for k in range(len(dif_data.query("Scenario == @scenario")['Mesh'].unique())):
                 mesh = dif_data.query("Scenario == @scenario")['Mesh'].unique()[k]
-                colour = colours[k+3]
+                #colour = colours[k+3]
+                colour = colours[j]
                 
                 #Final iteration over "Identifier" which is just the grain size oddly formatted.                
                 for l in dif_data.query("Scenario == @scenario and Mesh == @mesh")['Identifier'].unique():
@@ -85,7 +97,7 @@ for i in range(7):
         ax.set_ylim(310, 370)
         sample = spot_data['Sample'].unique()[i-1]
         #ax.text(1630, 312, 'Sample '+sample)
-        ax.text(2100, 366, 'Sample '+sample)
+        ax.text(2050, 366, 'Sample '+sample)
         ax.get_xaxis().set_ticks([])
         ax.get_yaxis().set_ticks([])
         
@@ -94,14 +106,16 @@ for i in range(7):
         model_4 = dif_data.query("Scenario == 4 and Mesh == 40")
         
         #Setting colours for the models
-        colours_3 = cmaps[2](np.linspace(0, 1, n))
-        colours_4 = cmaps[3](np.linspace(0, 1, n))
-        colour_3 = colours_3[5]
-        colour_4 = colours_4[5]
+        # colours_3 = cmaps[2](np.linspace(0, 1, n))
+        # colours_4 = cmaps[3](np.linspace(0, 1, n))
+        # colour_3 = colours_3[5]
+        # colour_4 = colours_4[5]
         
         #plotting the Ar diffusion models
-        ax.plot(model_3['um'], model_3['Apparent_Age'], color = colour_3)
-        ax.plot(model_4['um'], model_4['Apparent_Age'], color = colour_4)
+        # ax.plot(model_3['um'], model_3['Apparent_Age'], color = colour_3)
+        # ax.plot(model_4['um'], model_4['Apparent_Age'], color = colour_4)
+        ax.plot(model_3['um'], model_3['Apparent_Age'], color = colours[2])
+        ax.plot(model_4['um'], model_4['Apparent_Age'], color = colours[3])
         
         #Plotting individual spot data
         temp = spot_data.query('Sample == @sample')
@@ -111,6 +125,10 @@ for i in range(7):
             y = temp['Age'][j]
             y_err = temp['error_1sigma'][j]*2
             ax.plot([x, x], [y+y_err, y-y_err], color = 'k', linewidth = 4.0)
-            
-plt.tight_layout()
+     
+#Final formatting
+plt.subplots_adjust(wspace=0, hspace = 0)
+#plt.tight_layout()
+
+#saving the figure
 plt.savefig('Output/7_plate/diffusion_fig.jpg', dpi=600)

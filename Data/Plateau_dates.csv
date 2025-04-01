@@ -1,0 +1,6 @@
+﻿Sample,Material,Age,Error,MSWD,Px,Ar39_percent,n_used,n_total
+12A05-1,muscovite,325.85,0.15,2.5,0.084,85,3,9
+01A06-1,muscovite,330,0.2,3.2,0.002,100,8,9
+01A02-1-1,muscovite,326.88,0.41,2.9,0.0014,92,6,8
+01A02-1-2 biotite,,322.55,0.18,3.3,0.0015,100,8,9
+14B02-1,lithium_mica,332.08,0.22,25,1.5E-11,86,3,9
