@@ -12,8 +12,9 @@ import numpy as np
 
 #importing data
 dif_data = pd.read_csv("Data\Ar_Diffusion.csv")
-spot_data = pd.read_csv("Data\Spot_dates.csv")
 dif_data = dif_data.query("Mesh == 40 or Mesh == 12")
+spot_data = pd.read_csv("Data\Spot_dates.csv")
+plat_data = pd.read_csv("Data\Plateau_dates.csv")
 
 #Building a list full of colourmap functions to be used later 
 # cmaps = [plt.cm.Purples,#If commented out we will just use single colours for one plotted mesh size
@@ -54,6 +55,11 @@ for i in range(7):
         ax.set_xlabel('Distance from grain core (μm)')
         ax.set_ylabel('Date (Ma)')
         
+        #Adding annotations
+        ax.text(450, 326.5, 'Plateau dates')
+        ax.text(1600, 306, 'Spot date inset')
+        ax.text(1500, 390, 'Ar diffusion models')
+        
         #Setting x axis to the top
         # ax.tick_params(axis = 'x', top = True, labeltop = True, bottom = False, labelbottom = False)
         ax.xaxis.tick_top()  
@@ -89,6 +95,12 @@ for i in range(7):
             y_err = spot_data['error_1sigma'][j]*2
             # ax.plot([x, x], [y+y_err, y-y_err], color = 'k', alpha = 0.5)
             ax.plot([x, x], [y+y_err, y-y_err], color = 'k', alpha = 0.5, linewidth = 4.0)
+            
+        #plotting plateau data in the BigFig (tm)
+        for j in range(len(plat_data)):
+            y = plat_data['Age'][j]
+            y_err = plat_data['Error'][j]
+            ax.fill_between([0, 400], [y-y_err, y-y_err], [y+y_err, y+y_err], color = "grey")
     
     #Plotting the small subfigures
     else:
